@@ -1,4 +1,6 @@
 // pages/_app.js
+import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/globals.css'
 import { CartProvider } from '../context/CartContext'
 

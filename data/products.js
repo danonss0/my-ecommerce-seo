@@ -22,7 +22,87 @@ export const products = [
         id: '3',
         name: 'Smartfon Ultra ++',
         description: 'Flagowy smartfon z najlepszym aparatem.',
-        price: 3499,
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '4',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '5',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '6',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '7',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '8',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '9',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '10',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
+        image: '/images/phone.jpg',
+        reviewRating: 4.3,
+        reviewCount: 21
+      }
+      ,
+    {
+        id: '11',
+        name: 'Smartfon Ultra ++',
+        description: 'Flagowy smartfon z najlepszym aparatem.',
+        price: 2000,
         image: '/images/phone.jpg',
         reviewRating: 4.3,
         reviewCount: 21

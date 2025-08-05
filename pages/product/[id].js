@@ -23,7 +23,7 @@ export default function ProductPage({ product }) {
     "@context": "https://schema.org/",
     "@type": "Product",
     name: product.name,
-    image: [ siteUrl + product.image ],
+    image: [siteUrl + product.image],
     description: product.description,
     sku: product.id,
     offers: {
@@ -33,17 +33,19 @@ export default function ProductPage({ product }) {
       availability: "https://schema.org/InStock",
       url: `${siteUrl}/product/${product.id}`
     },
-    aggregateRating: product.reviewRating ? {
-      "@type": "AggregateRating",
-      ratingValue: product.reviewRating,
-      reviewCount: product.reviewCount
-    } : undefined
+    aggregateRating: product.reviewRating
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: product.reviewRating,
+          reviewCount: product.reviewCount
+        }
+      : undefined
   }
 
   return (
     <Layout>
       <Head>
-        <title>{product.name} — Mój Sklep</title>
+        <title>{`${product.name} - Mój Sklep`}</title>
         <meta name="description" content={product.description} />
         <meta property="og:title" content={product.name} />
         <meta property="og:description" content={product.description} />
@@ -51,15 +53,28 @@ export default function ProductPage({ product }) {
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div style={{ display: 'flex', gap: 20 }}>
-        <div style={{ flex: 1 }}>
-          <img src={product.image} alt={product.name} style={{ width: '100%', borderRadius: 6 }} />
-        </div>
-        <div style={{ flex: 1 }}>
-          <h1>{product.name}</h1>
-          <p style={{ marginTop: 10 }}>{product.description}</p>
-          <p style={{ marginTop: 10, fontWeight: 700 }}>{product.price} zł</p>
-          <button className="btn" style={{ marginTop: 12 }} onClick={() => addItem(product, 1)}>Dodaj do koszyka</button>
+      <div className="container my-4">
+        <div className="row g-4">
+          <div className="col-md-6">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="img-fluid rounded"
+              style={{ objectFit: 'cover', maxHeight: 400, width: '100%' }}
+            />
+          </div>
+          <div className="col-md-6 d-flex flex-column">
+            <h1>{product.name}</h1>
+            <p className="mt-3">{product.description}</p>
+            <p className="mt-auto fw-bold fs-4">{product.price} zł</p>
+            <button
+              className="btn btn-primary mt-3"
+              onClick={() => addItem(product, 1)}
+              aria-label={`Dodaj produkt ${product.name} do koszyka`}
+            >
+              Dodaj do koszyka
+            </button>
+          </div>
         </div>
       </div>
     </Layout>
