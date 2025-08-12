@@ -1,12 +1,20 @@
 // pages/index.js
 import Link from 'next/link'
-import { products } from '../data/products'
+
 import Layout from '../components/Layout'
 import { useCart } from '../context/CartContext'
 import Head from 'next/head'
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../lib/firebase";
 
-export async function getStaticProps() {
-  return { props: { products } }
+export async function getServerSideProps() {
+  const snapshot = await getDocs(collection(db, "products"));
+  const products = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+
+  return { props: { products } };
 }
 
 export default function Home({ products }) {

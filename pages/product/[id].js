@@ -1,23 +1,21 @@
 // pages/product/[id].js
 import Head from 'next/head'
 import Layout from '../../components/Layout'
-import { products } from '../../data/products'
 import { useCart } from '../../context/CartContext'
-
-export async function getStaticPaths() {
-  const paths = products.map(p => ({ params: { id: p.id } }))
-  return { paths, fallback: false }
-}
-
-export async function getStaticProps({ params }) {
-  const product = products.find(p => p.id === params.id)
-  if (!product) return { notFound: true }
-  return { props: { product } }
-}
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../../lib/firebase'
 
 export default function ProductPage({ product }) {
   const { addItem } = useCart()
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+  if (!product) {
+    return (
+      <Layout>
+        <p>Produkt nie znaleziony</p>
+      </Layout>
+    )
+  }
 
   const jsonLd = {
     "@context": "https://schema.org/",
@@ -45,7 +43,7 @@ export default function ProductPage({ product }) {
   return (
     <Layout>
       <Head>
-        <title>{`${product.name} - Mój Sklep`}</title>
+        <title>{`${product.name} - TechZone`}</title>
         <meta name="description" content={product.description} />
         <meta property="og:title" content={product.name} />
         <meta property="og:description" content={product.description} />
@@ -79,4 +77,32 @@ export default function ProductPage({ product }) {
       </div>
     </Layout>
   )
+}
+
+export async function getServerSideProps({ params }) {
+  const { id } = params
+  const docRef = doc(db, 'products', id)
+  const docSnap = await getDoc(docRef)
+
+  if (!docSnap.exists()) {
+    return {
+      notFound: true
+    }
+  }
+
+  const productData = docSnap.data()
+
+  // Jeśli obrazki w Firestore mają pełny URL, to zostaw jak jest, 
+  // jeśli to ścieżka lokalna, dodaj 'siteUrl' jak w jsonLd (wtedy trzeba przekazać w props)
+  
+  const product = {
+    id,
+    ...productData
+  }
+
+  return {
+    props: {
+      product
+    }
+  }
 }
