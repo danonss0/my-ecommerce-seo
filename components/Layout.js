@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useCart } from '../context/CartContext'
+import { useAuth } from '../context/AuthContext'
+
 
 const AUTO_HIDE_MS = 3200
 const ANIM_MS = 360
@@ -11,7 +13,15 @@ const ANIM_MS = 360
 export default function Layout({ children }) {
     const { count, toasts, removeToast } = useCart()
     const router = useRouter()
-    
+    const { user, login } = useAuth()
+
+    const handleProfileClick = () => {
+        if (user) {
+            router.push('/profile')
+        } else {
+            router.push('/login')
+        }
+    }
 
     return (
         <>
@@ -24,17 +34,27 @@ export default function Layout({ children }) {
                 <div className="container d-flex justify-content-between align-items-center">
                     <Link href="/" className="fw-bold text-decoration-none text-dark fs-4">Mój Sklep</Link>
 
-                    <Link href="/cart" className="d-flex flex-column align-items-center text-decoration-none text-dark" aria-label="Koszyk">
-                        <div className="position-relative d-inline-block">
-                            <i className="bi bi-bag fs-3"></i>
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.7rem', minWidth: '1.1rem' }}>
-                                {count}
-                            </span>
-                        </div>
-                        <div style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Koszyk</div>
-                    </Link>
+                    <nav className="d-flex align-items-center gap-3">
+                        <Link href="/profile" className="d-flex flex-column align-items-center text-decoration-none text-dark" aria-label="Profil">
+                            <div className="position-relative d-inline-block">
+                                <i className="bi bi-people fs-3"></i>  
+                            </div>
+                            <div style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Mój profil</div> {/* zmieniłem też na "Profil" */}
+                        </Link>
+
+                        <Link href="/cart" className="d-flex flex-column align-items-center text-decoration-none text-dark" aria-label="Koszyk">
+                            <div className="position-relative d-inline-block">
+                                <i className="bi bi-bag fs-3"></i>
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '0.7rem', minWidth: '1.1rem' }}>
+                                    {count}
+                                </span>
+                            </div>
+                            <div style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Koszyk</div>
+                        </Link>
+                    </nav>
                 </div>
             </header>
+
 
             <main className="container my-4">{children}</main>
 
@@ -59,24 +79,24 @@ export default function Layout({ children }) {
 // osobny komponent dla pojedynczego toastu
 function ToastItem({ toast, onClose, router }) {
     const [show, setShow] = useState(false)
-  
+
     useEffect(() => {
-      // wejście natychmiast
-      const enter = setTimeout(() => setShow(true), 10)
-  
-      // ile ms zostało do rozpoczęcia ukrywania
-      const now = Date.now()
-      const hideIn = Math.max(0, (toast.hideAt || (now + AUTO_HIDE_MS)) - now)
-  
-      const hide = setTimeout(() => setShow(false), hideIn)
-      // usuwamy toast po zakończeniu animacji
-      const clear = setTimeout(() => onClose(), hideIn + ANIM_MS + 10)
-  
-      return () => {
-        clearTimeout(enter)
-        clearTimeout(hide)
-        clearTimeout(clear)
-      }
+        // wejście natychmiast
+        const enter = setTimeout(() => setShow(true), 10)
+
+        // ile ms zostało do rozpoczęcia ukrywania
+        const now = Date.now()
+        const hideIn = Math.max(0, (toast.hideAt || (now + AUTO_HIDE_MS)) - now)
+
+        const hide = setTimeout(() => setShow(false), hideIn)
+        // usuwamy toast po zakończeniu animacji
+        const clear = setTimeout(() => onClose(), hideIn + ANIM_MS + 10)
+
+        return () => {
+            clearTimeout(enter)
+            clearTimeout(hide)
+            clearTimeout(clear)
+        }
     }, [toast, onClose])
 
     const handleGoCart = () => {

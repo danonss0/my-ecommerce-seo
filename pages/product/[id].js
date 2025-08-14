@@ -65,6 +65,7 @@ export default function ProductPage({ product }) {
             <h1>{product.name}</h1>
             <p className="mt-3">{product.description}</p>
             <p className="mt-auto fw-bold fs-4">{product.price} zł</p>
+            <p className="mt-auto fw-bold fs-4">{product.rating}</p>
             <button
               className="btn btn-primary mt-3"
               onClick={() => addItem(product, 1)}
