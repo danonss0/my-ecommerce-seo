@@ -17,7 +17,7 @@ export async function getServerSideProps({ query }) {
 
   // Sortowanie
   if (query.sort) {
-    switch(query.sort) {
+    switch (query.sort) {
       case 'price_asc':
         products.sort((a, b) => a.price - b.price);
         break;
@@ -31,7 +31,7 @@ export async function getServerSideProps({ query }) {
         products.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case 'rating_desc':
-        products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        products.sort((a, b) => (b.reviewRating || 0) - (a.reviewRating || 0));
         break;
     }
   }
@@ -61,11 +61,13 @@ export default function Home({ products, query, categories }) {
             <div className="product-card h-100">
               <Link href={`/product/${product.id}`} className='text-dark text-decoration-none'>
                 <img src={product.image} alt={product.name} />
-              
-              <div className="product-body">
-                <h5 className="mb-1">{product.name}</h5>
-                <div className="text-muted mb-2">{product.price} zł</div>
-              </div>
+
+                <div className="product-rating">{product.reviewRating} ★</div>
+
+                <div className="product-body">
+                  <h5 className="mb-1">{product.name}</h5>
+                  <div className="text-muted mb-2">{product.price} zł</div>
+                </div>
               </Link>
               <div className="product-hover">
                 <button

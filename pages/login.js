@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '../components/Layout'
-import { auth, db } from '../lib/firebase' // dostosuj ścieżkę jeśli masz inną
+import { auth, db } from '../lib/firebase'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
 
@@ -9,9 +9,10 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('') // imię
+  const [lastName, setLastName] = useState('')   // nazwisko
   const [error, setError] = useState('')
-
-  const [isRegistering, setIsRegistering] = useState(false) // czy pokazujemy formularz rejestracji
+  const [isRegistering, setIsRegistering] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -30,9 +31,11 @@ export default function LoginPage() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
-      // Tworzymy dokument użytkownika w Firestore z rolą user
+      // Tworzymy dokument użytkownika w Firestore z imieniem i nazwiskiem
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
+        firstName,
+        lastName,
         role: 'user',
         createdAt: new Date().toISOString(),
       })
@@ -47,6 +50,35 @@ export default function LoginPage() {
       <h1>{isRegistering ? 'Rejestracja' : 'Logowanie'}</h1>
 
       <form onSubmit={isRegistering ? handleRegister : handleLogin} style={{ maxWidth: 400 }}>
+        {isRegistering && (
+          <>
+            <div className="mb-3">
+              <label htmlFor="firstName" className="form-label">Imię</label>
+              <input
+                type="text"
+                id="firstName"
+                className="form-control"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+                
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="lastName" className="form-label">Nazwisko</label>
+              <input
+                type="text"
+                id="lastName"
+                className="form-control"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+                
+              />
+            </div>
+          </>
+        )}
+
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email</label>
           <input

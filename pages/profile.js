@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 export default function ProfilePage() {
-  const { user, logout, role, loading } = useAuth()
+  const { user, logout, role, loading, firstName, lastName } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
@@ -13,11 +13,14 @@ export default function ProfilePage() {
     }
   }, [user, loading, router])
 
+  if (loading) {
+    return <Layout><p>Ładowanie...</p></Layout>
+  }
 
   return (
     <Layout>
       <h1>Twój profil</h1>
-      <p>Witaj</p>
+      <p>Witaj {firstName} {lastName}!</p>
 
       <button 
           className="btn btn-warning mt-3"

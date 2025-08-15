@@ -124,7 +124,6 @@ export default function AdminPage() {
               value={name}
               onChange={e => setName(e.target.value)}
               required
-              placeholder="Np. Sony Xperia 10"
             />
           </div>
 

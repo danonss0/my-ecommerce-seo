@@ -13,6 +13,8 @@ const AuthContext = createContext()
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [role, setRole] = useState('user')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [loading, setLoading] = useState(true)
 
   // Tworzy dokument użytkownika jeśli nie istnieje
@@ -24,19 +26,33 @@ export function AuthProvider({ children }) {
       await setDoc(userRef, {
         email: firebaseUser.email,
         role: 'user',
+        firstName: '',
+        lastName: '',
         createdAt: new Date().toISOString(),
       })
+      setFirstName('')
+      setLastName('')
+    } else {
+      const data = docSnap.data()
+      setFirstName(data.firstName || '')
+      setLastName(data.lastName || '')
     }
   }
 
-  // Pobiera rolę użytkownika z Firestore
-  async function fetchUserRole(uid) {
+  // Pobiera dane użytkownika z Firestore
+  async function fetchUserData(uid) {
     const userRef = doc(db, 'users', uid)
     const docSnap = await getDoc(userRef)
     if (docSnap.exists()) {
-      return docSnap.data().role || 'user'
+      const data = docSnap.data()
+      setRole(data.role || 'user')
+      setFirstName(data.firstName || '')
+      setLastName(data.lastName || '')
+    } else {
+      setRole('user')
+      setFirstName('')
+      setLastName('')
     }
-    return 'user'
   }
 
   useEffect(() => {
@@ -46,10 +62,11 @@ export function AuthProvider({ children }) {
 
       if (firebaseUser) {
         await createUserIfNotExists(firebaseUser)
-        const userRole = await fetchUserRole(firebaseUser.uid)
-        setRole(userRole)
+        await fetchUserData(firebaseUser.uid)
       } else {
         setRole('user')
+        setFirstName('')
+        setLastName('')
       }
 
       setLoading(false)
@@ -72,7 +89,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, role, firstName, lastName, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
