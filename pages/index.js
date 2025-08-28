@@ -53,14 +53,16 @@ export default function Home({ products, query, categories }) {
 
       <h1 className="mb-4">Sklep demo</h1>
 
+      {/* Kategorie i sortowanie */}
       <FilterSort categories={categories} currentCategory={query.category || 'all'} currentSort={query.sort || ''} />
 
+      {/* Lista produktów */}
       <div className="row g-4 mt-3">
         {products.map(product => (
           <div className="col-sm-6 col-md-4 col-lg-3" key={product.id}>
             <div className="product-card h-100">
               <Link href={`/product/${product.id}`} className='text-dark text-decoration-none'>
-                <img src={product.image} alt={product.name} />
+                <img src={product.image} alt={product.name} className="img-fluid rounded-top" />
 
                 <div className="product-rating">{product.reviewRating} ★</div>
 
@@ -69,7 +71,7 @@ export default function Home({ products, query, categories }) {
                   <div className="text-muted mb-2">{product.price} zł</div>
                 </div>
               </Link>
-              <div className="product-hover">
+              <div className="product-hover text-center">
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={() => addItem(product, 1)}

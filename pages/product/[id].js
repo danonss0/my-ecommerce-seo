@@ -5,7 +5,8 @@ import { useCart } from '../../context/CartContext'
 import { doc, getDoc, collection, query, where, addDoc, serverTimestamp, getDocs, updateDoc } from 'firebase/firestore'
 import { db } from '../../lib/firebase'
 import { useState, useEffect } from 'react'
-import { useAuth } from '../../context/AuthContext' // zakładam, że masz taki kontekst
+import { useAuth } from '../../context/AuthContext'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 
 export default function ProductPage({ product }) {
   const { addItem } = useCart()
@@ -15,23 +16,28 @@ export default function ProductPage({ product }) {
   const [reviews, setReviews] = useState([])
   const [newReview, setNewReview] = useState('')
   const [rating, setRating] = useState(5)
+  const [saving, setSaving] = useState(false)
 
-  useEffect(() => {
-    loadReviews()
-  }, [])
+  useEffect(() => { loadReviews() }, [])
 
   async function loadReviews() {
-    const q = query(collection(db, 'reviews'), where('productId', '==', product.id))
+    const q = query(
+      collection(db, 'reviews'),
+      where('productId', '==', product.id),
+    )
     const querySnapshot = await getDocs(q)
-    const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    const data = querySnapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      // sortowanie po createdAt malejąco (najnowsze pierwsze)
+      .sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds)
     setReviews(data)
   }
 
   async function handleAddReview() {
     if (!user) return alert('Musisz być zalogowany, aby dodać opinię.')
-
     if (newReview.trim() === '') return alert('Napisz coś w treści recenzji.')
 
+    setSaving(true)
     await addDoc(collection(db, 'reviews'), {
       productId: product.id,
       author: firstName,
@@ -44,6 +50,7 @@ export default function ProductPage({ product }) {
     setNewReview('')
     setRating(5)
     loadReviews()
+    setSaving(false)
   }
 
   async function updateProductRating() {
@@ -92,70 +99,92 @@ export default function ProductPage({ product }) {
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="container my-4">
+      <div className="container my-5">
         <div className="row g-4">
+          {/* Obraz produktu - duży i w pełni widoczny */}
           <div className="col-md-6">
             <img
               src={product.image}
               alt={product.name}
               className="img-fluid rounded"
-              style={{ objectFit: 'cover', maxHeight: 400, width: '100%' }}
+              style={{ objectFit: 'contain', width: '100%', maxHeight: 500 }}
             />
           </div>
+
+          {/* Informacje o produkcie */}
           <div className="col-md-6 d-flex flex-column">
-            <h1>{product.name}</h1>
-            <p className="mt-3">{product.description}</p>
-            <p className="mt-auto fw-bold fs-4">{product.price} zł</p>
+            <div className="card shadow-sm p-4 flex-grow-1 d-flex flex-column">
+              <h1>{product.name}</h1>
+              <p className="mt-3 flex-grow-1">{product.description}</p>
 
-            <p className="mt-2">Średnia ocena: ⭐ {product.reviewRating} ({product.reviewCount} opinii)</p>
+              <div className="d-flex justify-content-between align-items-center mt-3">
+                <p className="fw-bold fs-4 mb-0">{product.price} zł</p>
+                <p className="mb-0">⭐ {product.reviewRating} ({product.reviewCount} opinii)</p>
+              </div>
 
-            <button
-              className="btn btn-primary mt-3"
-              onClick={() => addItem(product, 1)}
-              aria-label={`Dodaj produkt ${product.name} do koszyka`}
-            >
-              Dodaj do koszyka
-            </button>
+              <button
+                className="btn btn-primary mt-4 w-100"
+                onClick={() => addItem(product, 1)}
+              >
+                <i className="bi bi-cart-plus me-2"></i> Dodaj do koszyka
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Sekcja recenzji */}
         <hr className="my-5" />
-        <h3>Opinie użytkowników</h3>
+        <h3 className="mb-4">Opinie użytkowników</h3>
 
-        {reviews.length === 0 && <p>Brak opinii dla tego produktu.</p>}
-        <ul className="list-group mb-4">
-          {reviews.map(r => (
-            <li key={r.id} className="list-group-item">
-              <strong>{r.author}</strong> — ⭐ {r.rating}
-              <p className="mb-1">{r.content}</p>
-              <small>{r.createdAt?.toDate?.().toLocaleString?.() || ''}</small>
-            </li>
-          ))}
-        </ul>
+        {reviews.length === 0 ? (
+          <div className="alert alert-info">Brak opinii dla tego produktu.</div>
+        ) : (
+          <ul className="list-group mb-4">
+            {reviews.map(r => (
+              <li key={r.id} className="list-group-item shadow-sm mb-2 rounded">
+                <div className="d-flex justify-content-between align-items-center">
+                  <strong>{r.author}</strong>
+                  <span>⭐ {r.rating}</span>
+                </div>
+                <p className="mb-1">{r.content}</p>
+                <small className="text-muted">{r.createdAt?.toDate?.().toLocaleString?.() || ''}</small>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {/* Formularz dodawania opinii */}
         {user ? (
-          <div className="card p-3">
+          <div className="card shadow-sm p-4 mb-5">
             <h5>Dodaj opinię</h5>
-            <label>Ocena:</label>
-            <select className="form-select mb-2" value={rating} onChange={e => setRating(e.target.value)}>
+            <label className="form-label">Ocena:</label>
+            <select
+              className="form-select mb-3 w-auto"
+              value={rating}
+              onChange={e => setRating(e.target.value)}
+            >
               {[5, 4, 3, 2, 1].map(num => (
                 <option key={num} value={num}>{num}</option>
               ))}
             </select>
             <textarea
-              className="form-control mb-2"
+              className="form-control mb-3"
               placeholder="Napisz swoją opinię..."
               value={newReview}
               onChange={e => setNewReview(e.target.value)}
             />
-            <button className="btn btn-success" onClick={handleAddReview}>
-              Dodaj opinię
+            <button
+              className="btn btn-success"
+              onClick={handleAddReview}
+              disabled={saving}
+            >
+              {saving ? "Dodawanie..." : "Dodaj opinię"}
             </button>
           </div>
         ) : (
-          <p>Aby dodać opinię, musisz być zalogowany.</p>
+          <div className="alert alert-warning">
+            Aby dodać opinię, musisz być zalogowany.
+          </div>
         )}
       </div>
     </Layout>
@@ -172,13 +201,7 @@ export async function getServerSideProps({ params }) {
   }
 
   const productData = docSnap.data()
-
   return {
-    props: {
-      product: {
-        id,
-        ...productData
-      }
-    }
+    props: { product: { id, ...productData } }
   }
 }
