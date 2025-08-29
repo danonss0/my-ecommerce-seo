@@ -39,42 +39,45 @@ export default function CartPage() {
           <>
             <div className="card shadow-sm mb-4">
               <div className="card-body p-0">
-                <table className="table table-hover align-middle mb-0">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Produkt</th>
-                      <th className="text-center">Ilość</th>
-                      <th>Cena / szt.</th>
-                      <th>Łącznie</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map(({ product, quantity }) => (
-                      <tr key={product.id}>
-                        <td className="fw-medium">{product.name}</td>
-                        <td className="text-center">
-                          <div className="btn-group" role="group">
-                            <button
-                              className="btn btn-outline-danger btn-sm"
-                              onClick={() => decreaseItem(product.id, 1)}
-                            >
-                              <i className="bi bi-dash"></i>
-                            </button>
-                            <span className="px-3 fw-bold">{quantity}</span>
-                            <button
-                              className="btn btn-outline-success btn-sm"
-                              onClick={() => increaseItem(product.id, 1)}
-                            >
-                              <i className="bi bi-plus"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>{product.price} zł</td>
-                        <td className="fw-bold">{(product.price * quantity).toFixed(2)} zł</td>
+                {/* RESPONSYWNA TABELA */}
+                <div className="table-responsive">
+                  <table className="table table-hover align-middle mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Produkt</th>
+                        <th className="text-center">Ilość</th>
+                        <th>Cena / szt.</th>
+                        <th>Łącznie</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {items.map(({ product, quantity }) => (
+                        <tr key={product.id}>
+                          <td className="fw-medium">{product.name}</td>
+                          <td className="text-center">
+                            <div className="btn-group" role="group">
+                              <button
+                                className="btn btn-outline-danger btn-sm"
+                                onClick={() => decreaseItem(product.id, 1)}
+                              >
+                                <i className="bi bi-dash"></i>
+                              </button>
+                              <span className="px-3 fw-bold">{quantity}</span>
+                              <button
+                                className="btn btn-outline-success btn-sm"
+                                onClick={() => increaseItem(product.id, 1)}
+                              >
+                                <i className="bi bi-plus"></i>
+                              </button>
+                            </div>
+                          </td>
+                          <td>{product.price} zł</td>
+                          <td className="fw-bold">{(product.price * quantity).toFixed(2)} zł</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -86,7 +89,7 @@ export default function CartPage() {
               <p className="fs-5">
                 <strong>Razem:</strong> {total.toFixed(2)} zł
               </p>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex flex-column flex-sm-row justify-content-between gap-2">
                 <button className="btn btn-outline-secondary" onClick={clear}>
                   <i className="bi bi-trash3 me-2"></i>Wyczyść koszyk
                 </button>
