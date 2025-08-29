@@ -2,7 +2,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from "next/image";
-import { Analytics } from "@vercel/analytics/next"
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useCart } from '../context/CartContext'
