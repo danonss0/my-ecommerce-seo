@@ -72,7 +72,10 @@ export default function Layout({ children }) {
                 {children}
             </main>
 
-            <footer className="text-center py-3 border-top">© {new Date().getFullYear()} Mój Sklep</footer>
+            <footer className="text-center py-3 border-top" itemScope itemType="https://schema.org/Organization">
+                <span itemProp="name">TechZone</span> © {new Date().getFullYear()}
+            </footer>
+
 
             <div
                 aria-live="polite"
