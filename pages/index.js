@@ -2,6 +2,8 @@
 import Link from 'next/link'
 import Layout from '../components/Layout'
 import { useCart } from '../context/CartContext'
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import Head from 'next/head'
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
@@ -111,6 +113,8 @@ export default function Home({ products, query, categories }) {
         }
         .product-rating { font-weight: bold; }
       `}</style>
+      <SpeedInsights />
+      <Analytics />
     </Layout>
   )
 }
