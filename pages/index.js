@@ -2,12 +2,11 @@
 import Link from 'next/link'
 import Layout from '../components/Layout'
 import { useCart } from '../context/CartContext'
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from '@vercel/speed-insights/next';
 import Head from 'next/head'
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import FilterSort from '../components/FilterSort'
+import Image from 'next/image'
 
 export async function getServerSideProps({ query }) {
   const snapshot = await getDocs(collection(db, "products"));
@@ -79,11 +78,16 @@ export default function Home({ products, query, categories }) {
               <div className="col-sm-6 col-lg-4 col-xl-3" key={product.id}>
                 <div className="product-card h-100 shadow-sm rounded overflow-hidden position-relative">
                   <Link href={`/product/${product.id}`} className='text-dark text-decoration-none'>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="img-fluid w-100 product-img"
-                    />
+                    <div className="position-relative" style={{ width: '100%', height: '200px' }}>
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        priority={false}
+                      />
+                    </div>
                     <div className="product-rating position-absolute top-0 end-0 bg-primary text-white px-2 py-1 rounded-start">
                       {product.reviewRating || 0} ★
                     </div>
@@ -112,8 +116,6 @@ export default function Home({ products, query, categories }) {
         }
         .product-rating { font-weight: bold; }
       `}</style>
-      <SpeedInsights />
-      <Analytics />
     </Layout>
   )
 }

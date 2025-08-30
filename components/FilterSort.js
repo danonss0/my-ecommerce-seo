@@ -13,6 +13,7 @@ export default function FilterSort({ categories, currentCategory, currentSort })
 
   return (
     <div className="card shadow-sm p-3 mb-4">
+      {/* Kategorie */}
       <h5 className="mb-3">Kategorie</h5>
       <ul className="list-unstyled categories-list">
         <li>
@@ -37,9 +38,11 @@ export default function FilterSort({ categories, currentCategory, currentSort })
 
       <hr />
 
+      {/* Sortowanie */}
       <div>
-        <label className="form-label fw-semibold">Sortuj:</label>
+        <label htmlFor="sort-select" className="form-label fw-semibold">Sortuj:</label>
         <select
+          id="sort-select"
           className="form-select form-select-sm shadow-sm"
           value={currentSort}
           onChange={handleSortChange}

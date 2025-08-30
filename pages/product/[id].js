@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext'
 import { doc, getDoc, collection, query, where, addDoc, serverTimestamp, getDocs, updateDoc } from 'firebase/firestore'
 import { db } from '../../lib/firebase'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useAuth } from '../../context/AuthContext'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -103,13 +104,16 @@ export default function ProductPage({ product }) {
         <div className="row g-4">
           {/* Obraz produktu - duży i w pełni widoczny */}
           <div className="col-md-6">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="img-fluid rounded"
-              style={{ objectFit: 'contain', width: '100%', maxHeight: 500 }}
-            />
-          </div>
+  <div style={{ position: 'relative', width: '100%', height: 500 }}>
+    <Image
+      src={product.image}
+      alt={product.name}
+      fill
+      style={{ objectFit: 'contain' }}
+      priority
+    />
+  </div>
+</div>
 
           {/* Informacje o produkcie */}
           <div className="col-md-6 d-flex flex-column">
