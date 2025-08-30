@@ -14,7 +14,7 @@ export default function FilterSort({ categories, currentCategory, currentSort })
   return (
     <div className="card shadow-sm p-3 mb-4">
       {/* Kategorie */}
-      <h5 className="mb-3">Kategorie</h5>
+      <h2 className="mb-3">Kategorie</h2>
       <ul className="list-unstyled categories-list">
         <li>
           <Link
