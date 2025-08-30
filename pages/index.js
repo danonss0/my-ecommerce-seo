@@ -65,10 +65,10 @@ export default function Home({ products, query, categories }) {
       <div className="row">
         {/* Sidebar kategorii */}
         <div className="col-md-3 mb-3">
-          <FilterSort 
-            categories={categories} 
-            currentCategory={query.category || 'all'} 
-            currentSort={query.sort || ''} 
+          <FilterSort
+            categories={categories}
+            currentCategory={query.category || 'all'}
+            currentSort={query.sort || ''}
           />
         </div>
 
@@ -79,11 +79,10 @@ export default function Home({ products, query, categories }) {
               <div className="col-sm-6 col-lg-4 col-xl-3" key={product.id}>
                 <div className="product-card h-100 shadow-sm rounded overflow-hidden position-relative">
                   <Link href={`/product/${product.id}`} className='text-dark text-decoration-none'>
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="img-fluid w-100" 
-                      style={{ objectFit: 'cover', height: '200px' }} 
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="img-fluid w-100 product-img"
                     />
                     <div className="product-rating position-absolute top-0 end-0 bg-primary text-white px-2 py-1 rounded-start">
                       {product.reviewRating || 0} ★
